@@ -1,0 +1,98 @@
+[
+    {
+        "id": "d75a8227e01bba26",
+        "type": "tab",
+        "label": "Kontrol Lampu HTTP",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f8b3a1d7c93c10a2",
+        "type": "json",
+        "z": "d75a8227e01bba26",
+        "name": "Parse JSON",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 330,
+        "y": 200,
+        "wires": [
+            [
+                "f2d6b2eac93c1a33"
+            ]
+        ]
+    },
+    {
+        "id": "f2d6b2eac93c1a33",
+        "type": "function",
+        "z": "d75a8227e01bba26",
+        "name": "Kirim ke ESP32",
+        "func": "let data = msg.payload;\n\n// Jika payload adalah object seperti {\"ON\":\"\"} → ambil key-nya\nif (typeof data === \"object\") {\n  data = Object.keys(data)[0];\n}\n\n// Jika payload adalah string JSON (contoh: '{\"ON\":\"\"}') → parse dulu\nelse if (typeof data === \"string\" && data.includes('{')) {\n  try {\n    let obj = JSON.parse(data);\n    data = Object.keys(obj)[0];\n  } catch (e) {\n    // kalau gagal parse, biarkan data apa adanya\n  }\n}\n\n// pastikan hasil akhirnya string bersih\ndata = data.toString().trim();\n\n// Format hasil sesuai yang kamu mau\nmsg.payload = `${data}`;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 540,
+        "y": 200,
+        "wires": [
+            [
+                "40e8fa92c27b2c6b",
+                "1dec6b99a32fa344"
+            ]
+        ]
+    },
+    {
+        "id": "40e8fa92c27b2c6b",
+        "type": "debug",
+        "z": "d75a8227e01bba26",
+        "name": "Lihat Data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 710,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "f6f1ae54b00cd002",
+        "type": "http in",
+        "z": "d75a8227e01bba26",
+        "name": "MIT",
+        "url": "/LAMPU",
+        "method": "post",
+        "upload": false,
+        "skipBodyParsing": false,
+        "swaggerDoc": "",
+        "x": 150,
+        "y": 200,
+        "wires": [
+            [
+                "f8b3a1d7c93c10a2"
+            ]
+        ]
+    },
+    {
+        "id": "1dec6b99a32fa344",
+        "type": "websocket out",
+        "z": "d75a8227e01bba26",
+        "name": "",
+        "server": "ed9ddde4acdee9de",
+        "client": "",
+        "x": 710,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "ed9ddde4acdee9de",
+        "type": "websocket-listener",
+        "path": "/LAMPU",
+        "wholemsg": "false"
+    }
+]
