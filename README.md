@@ -162,7 +162,7 @@ const char* websocketPath = "/LAMPU";
 
 ## 👨‍💻 Pengembang
 
-**Author:** pklic  
+**Author:** BudhiPrasetyo  
 🌐 GitHub: [https://github.com/BudhiPrasetyo](https://github.com/BudhiPrasetyo)  
 📧 Email: *budhiprasetyoo28@email.com*  
 
